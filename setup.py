@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='deeppages',
-    version='0.1.1',
+    version='0.1.2',
     description="Django's database stored web content processor",
     url='https://github.com/ricardofalasca/deep-pages',
     author='Ricardo Falasca',

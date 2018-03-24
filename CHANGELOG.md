@@ -7,15 +7,14 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 
 ## [0.1.2] - 2018-03-22
 ### Added
- - Refactor function get_page_by_path() in utils.py
- - Add new function get_page_by_name() in utils.py
- - Rename function render_template to render_content() in utils.py
- - Add new function render_page() in utils.py
- - Add new function render_requested_page_content() in utils.py
- - Start using Page's class method active_pages() instead filter directly using
- model's queryset.
+ - Refactor function get_page_by_path() in utils.py.
+ - Add new function get_page_by_name() in utils.py.
+ - Rename function render_template to render_content() in utils.py.
+ - Add new function render_page() in utils.py.
+ - Add new function render_requested_page_content() in utils.py.
  - Add new method render() on Page model returning a rendered template.
  - Add this CHANGELOG file based on keepachangelog.com.
+ - Add new function is_acceptable_file_type() used for valid file type verification and avoid non-text-based content.
 
 ## [0.1.1] - 2018-03-21
 ### Changed

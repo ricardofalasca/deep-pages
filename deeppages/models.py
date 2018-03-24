@@ -1,5 +1,4 @@
 from django.utils.translation import ugettext_lazy as _
-from django.utils.functional import cached_property
 
 from django.db import models
 from django.urls import resolve, reverse, Resolver404
@@ -51,9 +50,10 @@ class Page(models.Model):
     def __str__(self):
         return self.name
 
-    @cached_property
-    def active_pages(cls):
-        return Page.objects.exclude(is_active=False).order_by('path')
+    def render(self, context=None, callback=None):
+        from .utils import render_content
+        ctx = context or {}
+        return render_content(self.content, ctx)
 
     def save(self, *args, **kwargs):
         if not self._validate_path():

@@ -16,9 +16,26 @@ def normalize_path(path):
     return new_path[:-1] if new_path.endswith('/') else '{}/'.format(new_path)
 
 
-def render_template(sender, request, page):
+def render_content(content, context):
+    ''' Render page content '''
+    ctx = Context(context or {})
+    return Template(content).render(ctx)
+
+
+def render_page(page, context, callback):
+    ''' Render page '''
+    if callback:
+        page_content = callback(page, context)
+    else:
+        page_content = page.content
+
+    return render_page(page_content, context)
+
+
+def render_requested_page_content(sender, request, page):
+    ''' Render page requested by Middleware or PageView '''
     content = page.content
-    ctx = Context({'request': request})
+    ctx = {'request': request}
 
     page_found.send_robust(
         sender=sender.__class__,
@@ -28,14 +45,34 @@ def render_template(sender, request, page):
         content=content,
         context=ctx)
 
-    # So, if content and/or context was changed inside the signal
-    # receiver, we'll render with the new values.
-    return Template(content).render(ctx)
+    # So, if content and/or context was changed inside the signal receiver,
+    # we'll render with the new values.
+    return render_content(content, ctx)
+
+
+def is_acceptable_file_type(path):
+    ''' Only text-based content can be accepted, any other will be ignored. '''
+    accepted_exts = ['.html', '.htm', '.css', '.js', '.svg']
+
+    is_accepted = len([a for a in accepted_exts if path.endswith(a)]) > 0
+
+    try:
+        has_extension = path.index('.') < (len(path) - 5)
+    except ValueError:
+        has_extension = False
+
+    return any([is_accepted, not has_extension])
 
 
 def get_page_by_path(sender, request, logger):
     '''
         Get page by path and return a rendered and processed template.
+
+        Arguments:
+
+            sender -- object sender
+            request -- WSGIRequest object
+            logger -- logger instance
 
         Also, three robust signals can be dispatched from here:
             1. page_requested (after a page request, ha!)
@@ -62,7 +99,10 @@ def get_page_by_path(sender, request, logger):
     '''
     path = normalize_path(request.path)
 
-    if settings.DEBUG:
+    if not is_acceptable_file_type(path):
+        return
+
+    if settings.DEBUG and logger:
         logger.debug('Path requested: [{}]'.format(path))
 
     # dispatch page requested signal
@@ -82,7 +122,7 @@ def get_page_by_path(sender, request, logger):
             Q(path__iexact=path) | Q(path__iexact=request.path))
 
     except Page.DoesNotExist:
-        if settings.DEBUG:
+        if settings.DEBUG and logger:
             logger.exception('[{}]: Page Not Found'.format(path))
 
         page_not_found.send_robust(
@@ -95,4 +135,34 @@ def get_page_by_path(sender, request, logger):
         else:
             raise PageNotFoundException
     else:
-        return render_template(sender, request, page)
+        return render_requested_page_content(sender, request, page)
+
+
+def get_page_by_name(name, context=None, callback=None):
+    '''
+        Get page by its name and render it.
+
+        Arguments:
+
+            name -- Page name
+
+        Keyword arguments:
+
+            context -- dictionary with additional key/values that
+            will be used for page content rendering (default: None)
+
+            callback -- callback function - will be called before render the
+            page content (default: None)
+    '''
+    if not name:
+        return
+
+    try:
+        # try to get page directly
+        page = Page.objects.exclude(is_active=False).get(name__iexact=name)
+
+    except Page.DoesNotExist:
+        return
+
+    else:
+        return render_page(page, context, callback)
