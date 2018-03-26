@@ -40,7 +40,7 @@ def render_page(page, context, callback):
     else:
         page_content = page.content
 
-    return render_page(page_content, context)
+    return render_content(page_content, context)
 
 
 def render_requested_page_content(sender, request, page):
