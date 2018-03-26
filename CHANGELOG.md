@@ -5,6 +5,10 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 
 ## [Unreleased]
 
+## [0.1.3] - 2018-03-26
+### Added
+ - Fix normalize_path() function to check if deeppages' path isn't the root path, otherwise change the requested path to compare with existent deep pages
+
 ## [0.1.2] - 2018-03-22
 ### Added
  - Refactor function get_page_by_path() in utils.py.
