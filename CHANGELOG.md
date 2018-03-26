@@ -5,6 +5,15 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 
 ## [Unreleased]
 
+## [0.1.5] - 2018-03-26
+### Changed
+ - Fix: there was a bug when we're using Middleware way and PageView was not configured.
+
+## [0.1.4] - 2018-03-26
+### Changed
+ - Fix a stupid bug has been fixed after functions names refactoring
+ - Fix images referenced in README.md
+
 ## [0.1.3] - 2018-03-26
 ### Added
  - Fix normalize_path() function to check if deeppages' path isn't the root path, otherwise change the requested path to compare with existent deep pages

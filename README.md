@@ -80,6 +80,16 @@ def render():
 pip install deeppages
 ```
 
+After package install, add `deeppages` in your INSTALLED_APPS list.
+
+```
+INSTALLED_APPS = [
+    ...
+    'deeppages.apps.DeepPagesConfig',
+    ...
+]
+```
+
 If you want to use the `Middleware way` (personally, it's my preferred btw), open your settings file and look for MIDDLEWARE list.
 
 ```
