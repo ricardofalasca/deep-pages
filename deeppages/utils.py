@@ -2,6 +2,7 @@ from django.template import Template, Context
 from django.utils.deprecation import MiddlewareMixin
 from django.conf import settings
 from django.db.models import Q
+from django.urls import reverse
 
 from .signals import page_found, page_not_found, page_requested
 from .exceptions import InvalidPathException, PageNotFoundException
@@ -12,7 +13,17 @@ import re
 
 def normalize_path(path):
     ''' Remove duplicated slashes and reverse mode with/wo slash in the end '''
+    from .urls import get_deeppages_path
+
     new_path = re.sub('[\/]{2,}', '/', path)
+    deeppages_path = reverse('deeppages:{}'.format(get_deeppages_path()))
+
+    # check if deeppages' path isn't the root path
+    if deeppages_path != '/':
+        if new_path.startswith(deeppages_path):
+            new_path = new_path.replace(deeppages_path, '')
+            if not new_path.startswith('/'):
+                new_path = '/{}'.format(new_path)
     return new_path[:-1] if new_path.endswith('/') else '{}/'.format(new_path)
 
 
