@@ -13,13 +13,13 @@ DeepPages provides two ways to being used into your Django's project:
 
 All you need is add `DeepPageTemplateRendererMiddleware` as a middleware in your `settings`. I really do recommend to insert this middleware in the end of MIDDLEWARE's list.
 
-[!As Middleware](https://raw.githubusercontent.com/ricardofalasca/deep-pages/master/docs/how-it-works-as-middleware.png)
+![As Middleware](https://raw.githubusercontent.com/ricardofalasca/deep-pages/master/docs/how-it-works-as-middleware.png)
 
 ### 2. As PageView (TemplateView's inheritance)
 
 Actually it was the first way that I've created. You need to include DeepPage's url patterns into your project (see Install).
 
-[!As Middleware](https://raw.githubusercontent.com/ricardofalasca/deep-pages/master/docs/how-it-works-as-pageview.png)
+![As Middleware](https://raw.githubusercontent.com/ricardofalasca/deep-pages/master/docs/how-it-works-as-pageview.png)
 
 ## Signals
 
