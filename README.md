@@ -135,7 +135,7 @@ class YourNewView(PageView):
 
 And your `/test-page/` will be found at `/test-page/` as well.
 
-I'm using this package in a project that I'm developing and isn't under production environment. So, take care to use this in production.
+I'm using this package in a project that I'm developing and isn't under production environment. So, be careful to use this in production.
 
 Feel free to make it better and send your updates/suggestions.
 
