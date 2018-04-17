@@ -5,6 +5,7 @@ setup(
     name='deeppages',
     version='0.1.5',
     description="Django's database stored web content processor",
+    long_description = open('README.md').read(),
     url='https://github.com/ricardofalasca/deep-pages',
     author='Ricardo Falasca',
     author_email='ricardo@falasca.com.br',
