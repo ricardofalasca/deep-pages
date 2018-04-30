@@ -18,8 +18,13 @@ class DeepPageTemplateRendererMiddleware(MiddlewareMixin):
         '''
             Look for Deep Page's PATH pattern and return a rendered template
         '''
-        rendered_page = get_page_by_path(self, request, logger)
-        if not rendered_page:
-            return
 
-        return HttpResponse(rendered_page)
+        # DeepPages must work ONLY if actual response has status_code == 404
+        # (Not found). Otherwise, there is no reason to interfere into normal
+        # page response behavior.
+        if self.get_response(request).status_code == 404:
+            rendered_page = get_page_by_path(self, request, logger)
+            if not rendered_page:
+                return
+
+            return HttpResponse(rendered_page)
