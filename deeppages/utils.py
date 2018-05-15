@@ -68,16 +68,20 @@ def render_requested_page_content(sender, request, page):
 
 def is_acceptable_file_type(path):
     ''' Only text-based content can be accepted, any other will be ignored. '''
-    accepted_exts = ['.html', '.htm', '.css', '.js', '.svg']
+    filename = path.strip('/').split('/')[-1]
 
-    is_accepted = len([a for a in accepted_exts if path.endswith(a)]) > 0
+    accepted_exts = ['.html', '.htm', '.css', '.js', '.svg', '.txt']
+    max_ext_len = max(map(len, accepted_exts))
 
     try:
-        has_extension = path.index('.') < (len(path) - 5)
+        has_extension = filename.index('.') >= (len(filename) - max_ext_len)
     except ValueError:
         has_extension = False
 
-    return any([is_accepted, not has_extension])
+    is_accepted = not has_extension or len([a for a in accepted_exts
+                                            if filename.endswith(a)]) > 0
+
+    return is_accepted
 
 
 def get_page_by_path(sender, request, logger):
@@ -119,7 +123,7 @@ def get_page_by_path(sender, request, logger):
         return
 
     if settings.DEBUG and logger:
-        logger.debug('Path requested: [{}]'.format(path))
+        logger.debug('DeepPage Path Requested: [{}]'.format(path))
 
     # dispatch page requested signal
     page_requested.send_robust(
@@ -139,7 +143,7 @@ def get_page_by_path(sender, request, logger):
 
     except Page.DoesNotExist:
         if settings.DEBUG and logger:
-            logger.exception('[{}]: Page Not Found'.format(path))
+            logger.exception('DeepPage Not Found: [{}]'.format(path))
 
         page_not_found.send_robust(
             sender=sender.__class__,
@@ -177,7 +181,7 @@ def get_page_by_name(name, context=None, callback=None):
         # try to get page directly
         page = Page.objects.exclude(is_active=False).get(name__iexact=name)
 
-    except Page.DoesNotExist:
+    except ObjectDoesNotExist:
         return
 
     else:

@@ -24,7 +24,6 @@ class DeepPageTemplateRendererMiddleware(MiddlewareMixin):
         # page response behavior.
         if self.get_response(request).status_code == 404:
             rendered_page = get_page_by_path(self, request, logger)
-            if not rendered_page:
-                return
 
-            return HttpResponse(rendered_page)
+            if rendered_page:
+                return HttpResponse(rendered_page)
