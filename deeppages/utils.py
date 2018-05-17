@@ -3,6 +3,7 @@ from django.utils.deprecation import MiddlewareMixin
 from django.conf import settings
 from django.db.models import Q
 from django.urls import reverse, NoReverseMatch
+from django.core.exceptions import ObjectDoesNotExist
 
 from .signals import page_found, page_not_found, page_requested
 from .exceptions import InvalidPathException, PageNotFoundException
