@@ -14,6 +14,9 @@ class DeepPageTemplateRendererMiddleware(MiddlewareMixin):
         the page content and return it.
     '''
 
+    # TODO: check where is accessing request.POST/body and change the code.
+    # Also, create all possible tests before push new version. Maybe this
+    # should be a version bump to 1.0-stable.
     def process_request(self, request):
         '''
             Look for Deep Page's PATH pattern and return a rendered template
