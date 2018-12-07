@@ -4,6 +4,9 @@ from django.conf import settings
 from .views import PageView
 
 
+app_name = 'deeppages'
+
+
 def get_deeppages_path():
     try:
         path = settings.DEEP_PAGES_URL_NAME

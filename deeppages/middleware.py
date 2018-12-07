@@ -9,19 +9,15 @@ logger = logging.getLogger(__name__)
 
 
 class DeepPageTemplateRendererMiddleware(MiddlewareMixin):
+    ''' The goal of this middleware is find the respective page by URL, render
+    the page content and return it.
     '''
-        The goal of this middleware is find the respective page by URL, render
-        the page content and return it.
-    '''
-
     # TODO: check where is accessing request.POST/body and change the code.
     # Also, create all possible tests before push new version. Maybe this
     # should be a version bump to 1.0-stable.
     def process_request(self, request):
+        ''' Look for Deep Page's PATH pattern and return a rendered template
         '''
-            Look for Deep Page's PATH pattern and return a rendered template
-        '''
-
         # DeepPages must work ONLY if actual response has status_code == 404
         # (Not found). Otherwise, there is no reason to interfere into normal
         # page response behavior.

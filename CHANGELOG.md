@@ -5,6 +5,10 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 
 ## [Unreleased]
 
+## [0.1.9] - 2018-12-06
+### Changed:
+ - Fix: add 'app_name' in urls.py
+
 ## [0.1.8] - 2018-07-19
 ### Changed:
  - Fix: add new migration in favor of model's field Page.created_at

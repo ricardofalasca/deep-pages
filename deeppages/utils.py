@@ -16,7 +16,7 @@ def normalize_path(path):
     ''' Remove duplicated slashes and reverse mode with/wo slash in the end '''
     from .urls import get_deeppages_path
 
-    new_path = re.sub('[\/]{2,}', '/', path)
+    new_path = re.sub(r'[\/]{2,}', '/', path)
 
     try:
         # check if deeppages' path isn't the root path
@@ -86,37 +86,36 @@ def is_acceptable_file_type(path):
 
 
 def get_page_by_path(sender, request, logger):
-    '''
-        Get page by path and return a rendered and processed template.
+    ''' Get page by path and return a rendered and processed template.
 
-        Arguments:
+    Arguments:
 
-            sender -- object sender
-            request -- WSGIRequest object
-            logger -- logger instance
+        sender  -- object sender
+        request -- WSGIRequest object
+        logger  -- logger instance
 
-        Also, three robust signals can be dispatched from here:
-            1. page_requested (after a page request, ha!)
-            2. page_not_found (for non-existent pages! O'really?)
-            3. and, mainly, page_found (When a page exists AND is active! Ha!
-               Could you imagine that?)
+    Also, three robust signals can be dispatched from here:
+        1. page_requested (after a page request, ha!)
+        2. page_not_found (for non-existent pages! O'really?)
+        3. and, mainly, page_found (When a page exists AND is active! Ha!
+           Could you imagine that?)
 
-        Both signals: 'page_request' and 'page_not_found' these keyword
-        arguments will be received: 'path' and 'request'.
+    Both signals: 'page_request' and 'page_not_found' these keyword
+    arguments will be received: 'path' and 'request'.
 
-        For 'page_found':
-            - path: the path (URL) requested
-            - page: a deeppages.models.Page() model's instance that was found
-                    by its PATH
-            - request: WSGIRequest object
-            - context: a context dictionary (with request inside)
-            - content: the page content (you can change it as you wish)
+    For 'page_found':
+        - path: the path (URL) requested
+        - page: a deeppages.models.Page() model's instance that was found
+                by its PATH
+        - request: WSGIRequest object
+        - context: a context dictionary (with request inside)
+        - content: the page content (you can change it as you wish)
 
-        In case of 'page_not_found', after robust signal callback has been
-        returned, Django's will follow its normal flow.
+    In case of 'page_not_found', after robust signal callback has been
+    returned, Django's will follow its normal flow.
 
-        ps.: if settings.DEBUG is True, you can handle some logs for debug
-             purposes.
+    ps.: if settings.DEBUG is True, you can handle some logs for debug
+         purposes.
     '''
     path = normalize_path(request.path)
 
@@ -160,20 +159,19 @@ def get_page_by_path(sender, request, logger):
 
 
 def get_page_by_name(name, context=None, callback=None):
-    '''
-        Get page by its name and render it.
+    ''' Get page by its name and render it.
 
-        Arguments:
+    Arguments:
 
-            name -- Page name
+        name -- Page name
 
-        Keyword arguments:
+    Keyword arguments:
 
-            context -- dictionary with additional key/values that
-            will be used for page content rendering (default: None)
+        context -- dictionary with additional key/values that
+        will be used for page content rendering (default: None)
 
-            callback -- callback function - will be called before render the
-            page content (default: None)
+        callback -- callback function - will be called before render the
+        page content (default: None)
     '''
     if not name:
         return
@@ -181,6 +179,34 @@ def get_page_by_name(name, context=None, callback=None):
     try:
         # try to get page directly
         page = Page.objects.exclude(is_active=False).get(name__iexact=name)
+
+    except ObjectDoesNotExist:
+        return
+
+    else:
+        return render_page(page, context, callback)
+
+
+def get_page_by_slug(slug, context=None, callback=None):
+    ''' Get page by its slug and render it.
+
+    Arguments:
+
+        slug -- Page's slug
+
+    Keyword arguments:
+
+        context -- dictionary with additional key/values that
+        will be used for page content rendering (default: None)
+
+        callback -- callback function - will be called before render the
+        page content (default: None)
+    '''
+    if not slug:
+        return
+
+    try:
+        page = Page.objects.exclude(is_active=False).get(slug__iexact=slug)
 
     except ObjectDoesNotExist:
         return
