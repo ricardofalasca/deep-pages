@@ -19,7 +19,7 @@ setup(
         'Framework :: Django',
         'Framework :: Django :: 1.10',
         'Framework :: Django :: 1.11',
-        'Framework :: Django :: 2',
+        'Framework :: Django :: 2.0',
         'Framework :: Django :: 2.1',
         'Operating System :: OS Independent',
         'Programming Language :: Python',
