@@ -5,6 +5,10 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 
 ## [Unreleased]
 
+## [0.2.2] - 2019-09-26
+### Changed:
+ - Fix: add compatibility with Wagtail CMS
+
 ## [0.1.9] - 2018-12-06
 ### Changed:
  - Fix: add 'app_name' in urls.py
