@@ -61,13 +61,20 @@ class Page(models.Model):
 
     def _validate_path(self):
         try:
-            resolve(self.path)
+            resolved = resolve(self.path)
 
         except Resolver404:
             return True
 
         else:
-            return self.path != reverse('deeppages:__deep_page_view__')
+            # ignore url if Wagtail CMS is being used and serving for urls.
+            # as long Wagtail uses url patterns to serve pages and deep pages
+            # can be used serving by Middleare, I'm assuming the Wagtail isn't
+            # interfering in deep page's behaviorsl
+            if resolved.url_name == 'wagtail_serve':
+                return True
+            else:
+                return self.path != reverse('deeppages:__deep_page_view__')
 
     def __str__(self):
         return f'{self.pk}: {self.name} ({self.slug})'
