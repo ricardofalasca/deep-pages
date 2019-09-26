@@ -67,6 +67,9 @@ class Page(models.Model):
             return True
 
         else:
+            # Check if it's a deep pages' view answer
+            if resolved.func.view_class.__module__ == 'deeppages.views':
+                return True
             # ignore url if Wagtail CMS is being used and serving for urls.
             # as long Wagtail uses url patterns to serve pages and deep pages
             # can be used serving by Middleare, I'm assuming the Wagtail isn't
